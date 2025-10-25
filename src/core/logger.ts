@@ -1,22 +1,6 @@
 import pino, { type Bindings, type LoggerOptions } from "pino";
 
-type RuntimeEnv = Record<string, string | undefined>;
-
-const runtimeEnv: RuntimeEnv = (() => {
-  const bunEnv = (
-    globalThis as typeof globalThis & { Bun?: { env: RuntimeEnv } }
-  ).Bun?.env;
-
-  if (bunEnv) {
-    return bunEnv;
-  }
-
-  if (typeof process !== "undefined") {
-    return process.env;
-  }
-
-  return {};
-})();
+import { runtimeEnv } from "./runtime-env";
 
 const isProduction = runtimeEnv.NODE_ENV === "production";
 
