@@ -1,0 +1,21 @@
+{
+  "name": "loyal-confidential-oracle",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.32.1",
+    "@irys/upload": "^0.0.15",
+    "@irys/upload-solana": "^0.1.8",
+    "@solana/web3.js": "^1.98.4",
+    "graphql": "^16.11.0",
+    "urql": "^5.0.1",
+    "zod": "^4.1.12"
+  }
+}
