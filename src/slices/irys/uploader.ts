@@ -13,7 +13,9 @@ const logger = createLogger({ module: "irys:uploader" });
 let cachedUploaderPromise: Promise<BaseNodeIrys> | null = null;
 
 const getIrysUploader = async () => {
+  logger.debug("Getting Irys uploader");
   if (!cachedUploaderPromise) {
+    logger.debug("Creating Irys uploader");
     cachedUploaderPromise = (async () => {
       const onepassItem = await getItem(IRYS_ONEPASS_ITEM_NAME);
       assert(onepassItem, "OnePassword item is not set");
@@ -27,10 +29,11 @@ const getIrysUploader = async () => {
       return irysUploader;
     })();
   }
+  logger.debug("Returning Irys uploader");
   return cachedUploaderPromise;
 };
 
-export const uploadFile = async (file: File, txId?: string) => {
+export const uploadToIrys = async (input: string, txId?: string) => {
   const uploader = await getIrysUploader();
 
   const tags = [{ name: "Content-Type", value: "application/json" }];
@@ -38,11 +41,11 @@ export const uploadFile = async (file: File, txId?: string) => {
     tags.push({ name: "Root-TX", value: txId });
   }
 
-  const receipt = await uploader.upload(file.toString(), { tags });
+  const receipt = await uploader.upload(input, { tags });
   return receipt;
 };
 
-export const fetchIrysTransactionData = async (txId: string) => {
+export const fetchFromIrys = async (txId: string) => {
   const response = await httpClient.get<ArrayBuffer>(
     `${IRYS_GATEWAY_BASE_URL}/mutable/${txId}`
   );
