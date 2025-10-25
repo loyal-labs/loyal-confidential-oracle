@@ -10,7 +10,6 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@1password/connect": "^1.4.2",
     "@coral-xyz/anchor": "^0.32.1",
     "@irys/upload": "^0.0.15",
     "@irys/upload-solana": "^0.1.8",
