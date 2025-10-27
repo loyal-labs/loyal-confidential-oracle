@@ -2,13 +2,19 @@ import assert from "node:assert/strict";
 
 import { Connection, type ConnectionConfig } from "@solana/web3.js";
 
+import { AnchorProvider } from "@coral-xyz/anchor";
 import { createLogger } from "../../core/logger";
 import { SOLANA_RPC_URL, SOLANA_WS_ENDPOINT } from "./env";
-import { extractSolanaHost, resolveCommitment } from "./helpers";
+import {
+  extractSolanaHost,
+  getOracleKeypair,
+  resolveCommitment,
+} from "./helpers";
 
 const logger = createLogger({ module: "solana:model" });
 
 let cachedConnectionPromise: Promise<Connection> | null = null;
+let cachedAnchorProviderPromise: Promise<AnchorProvider> | null = null;
 
 export const getSolanaConnection = async (): Promise<Connection> => {
   if (!cachedConnectionPromise) {
@@ -56,4 +62,21 @@ export const getSolanaConnection = async (): Promise<Connection> => {
   return cachedConnectionPromise;
 };
 
-export default getSolanaConnection;
+export const getAnchorProvider = async (): Promise<AnchorProvider> => {
+  if (!cachedAnchorProviderPromise) {
+    cachedAnchorProviderPromise = (async () => {
+      const connection = await getSolanaConnection();
+      const wallet = getOracleKeypair();
+      const commitment = resolveCommitment();
+
+      return new AnchorProvider(connection, wallet, {
+        commitment: commitment,
+      });
+    })().catch((error) => {
+      cachedAnchorProviderPromise = null;
+      throw error;
+    });
+  }
+
+  return cachedAnchorProviderPromise;
+};

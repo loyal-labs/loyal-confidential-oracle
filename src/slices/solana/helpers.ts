@@ -1,8 +1,9 @@
-import { BN } from "@coral-xyz/anchor";
-import { PublicKey, type Commitment } from "@solana/web3.js";
+import { BN, Wallet } from "@coral-xyz/anchor";
+import { Keypair, PublicKey, type Commitment } from "@solana/web3.js";
+import assert from "node:assert";
 import { createLogger } from "../../core/logger";
 import { LOYAL_PROGRAM_ID } from "./constants";
-import { SOLANA_COMMITMENT } from "./env";
+import { SOLANA_COMMITMENT, SOLANA_ORACLE_PRIVATE_KEY } from "./env";
 import { DEFAULT_COMMITMENT, VALID_COMMITMENTS } from "./schemas";
 
 const logger = createLogger({ module: "solana:helpers" });
@@ -53,4 +54,12 @@ export const resolveCommitment = (): Commitment => {
   }
 
   return DEFAULT_COMMITMENT;
+};
+
+export const getOracleKeypair = (): Wallet => {
+  const privateKey = SOLANA_ORACLE_PRIVATE_KEY;
+  assert(privateKey, "SOLANA_ORACLE_PRIVATE_KEY not configured");
+  const keypair = Keypair.fromSecretKey(Buffer.from(privateKey, "hex"));
+
+  return new Wallet(keypair);
 };
