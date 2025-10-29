@@ -12,8 +12,13 @@
   "dependencies": {
     "@1password/connect": "^1.4.2",
     "@coral-xyz/anchor": "^0.32.1",
+    "@cosmjs/proto-signing": "^0.36.2",
+    "@cosmjs/stargate": "^0.36.2",
     "@irys/upload": "^0.0.15",
     "@irys/upload-solana": "^0.1.8",
+    "@nillion/nilai-ts": "^0.2.0",
+    "@nillion/nuc": "^1.0.0",
+    "@nillion/secretvaults": "^1.0.0",
     "@solana/web3.js": "^1.98.4",
     "axios": "^1.12.2",
     "graphql": "^16.11.0",
