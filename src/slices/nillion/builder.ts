@@ -1,5 +1,6 @@
+import type { Command } from "@nillion/nuc";
 import { Builder, Did, Signer } from "@nillion/nuc";
-import { NucCmd } from "@nillion/secretvaults";
+import { NucCmd, SecretVaultBuilderClient } from "@nillion/secretvaults";
 import { randomUUIDv7 } from "bun";
 import assert from "node:assert/strict";
 import { getBuilderClient } from "./helpers";
@@ -35,31 +36,23 @@ export async function getCollections() {
 
 export async function createDelegationToken(
   userDid: Did,
-  builderDid: Did,
+  builderClient: SecretVaultBuilderClient,
   builderSigner: Signer,
-  expiresInMinutes: number = 2880
+  expiresInMinutes: number = 2880,
+  command: Command = NucCmd.nil.db.data.create
 ): Promise<string> {
   const expiresInSeconds = expiresInMinutes * 60;
-  const delegationToken = await Builder.delegation()
+  const builderDid = await builderClient.getDid();
+  const rootToken = builderClient.rootToken;
+
+  const delegationToken = await Builder.delegationFrom(rootToken)
     .issuer(builderDid)
     .audience(userDid)
     .subject(builderDid)
-    .command(NucCmd.nil.db.data.create)
+    .command(command)
     .expiresAt(Math.floor(Date.now() / 1000) + expiresInSeconds)
     .signAndSerialize(builderSigner);
 
   return delegationToken;
 }
 
-export async function createInvocationTokenFromString(
-  builderDid: Did,
-  userSigner: Signer,
-  proofString: string
-) {
-  const invocationToken = await Builder.invocationFromString(proofString)
-    .audience(builderDid)
-    .arguments({ table: "users" })
-    .signAndSerialize(userSigner);
-
-  return invocationToken;
-}

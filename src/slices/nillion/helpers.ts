@@ -30,7 +30,7 @@ export const getUserSigner = (): Signer => {
 
 export const getNilauthClient = async (): Promise<NilauthClient> => {
   if (!nilauthClient) {
-    const payer = await PayerBuilder.fromPrivateKey(BUILDER_KEY)
+    const payer = await PayerBuilder.fromPrivateKey(USER_KEY)
       .chainUrl(RPC_URL)
       .gasLimit("auto")
       .broadcastTimeoutMs(10000)
