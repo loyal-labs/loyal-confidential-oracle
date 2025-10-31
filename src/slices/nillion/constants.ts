@@ -8,3 +8,7 @@ export const NODE_DB_URLS = [
 export const COLLECTION_ID = "019a3048-3c89-7000-8177-a3a21d2caa59";
 export const NILLION_LLM_BASE_URL = "https://nilai-a779.nillion.network/v1/";
 export const NILLION_LLM_MODEL = "google/gemma-3-27b-it";
+
+export const TOKEN_USES = 20;
+export const TOKEN_EXPIRATION_TIME = 2880; // 24 hours
+export const TOKEN_SANDBOX = true;

@@ -2,6 +2,7 @@ import Fastify from "fastify";
 
 import { createLogger } from "./core/logger";
 import { runtimeEnv } from "./core/runtime-env";
+import { solanaRoutes } from "./slices/solana/routes";
 
 const appLogger = createLogger({ module: "fastify" });
 
@@ -11,6 +12,7 @@ export const buildApp = () => {
   });
 
   app.get("/health", async () => ({ status: "ok" }));
+  app.register(solanaRoutes);
 
   return app;
 };

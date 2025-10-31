@@ -6,6 +6,7 @@ import {
 } from "@nillion/nilai-ts";
 import assert from "node:assert/strict";
 import { createLogger } from "../../core/logger";
+import { TOKEN_EXPIRATION_TIME, TOKEN_SANDBOX, TOKEN_USES } from "./constants";
 import { BUILDER_KEY } from "./env";
 
 const logger = createLogger({ module: "nillion:llm" });
@@ -13,11 +14,12 @@ const logger = createLogger({ module: "nillion:llm" });
 let delegationTokenServer: DelegationTokenServer | null = null;
 
 export const getDelegationTokenServer = async (
-  expTime: number = 2880,
-  tokenUses: number = 1,
-  sandbox: boolean = true
+  expTime: number = TOKEN_EXPIRATION_TIME,
+  tokenUses: number = TOKEN_USES,
+  sandbox: boolean = TOKEN_SANDBOX
 ): Promise<DelegationTokenServer> => {
   if (!delegationTokenServer) {
+    console.debug("Creating new delegation token server");
     assert(expTime > 0, "Expiration time must be greater than 0");
     assert(tokenUses > 0, "Token uses must be greater than 0");
     assert(typeof sandbox === "boolean", "Sandbox must be a boolean");
@@ -32,16 +34,15 @@ export const getDelegationTokenServer = async (
       tokenMaxUses: tokenUses,
     });
   }
+  console.debug("Delegation token server created");
   return delegationTokenServer;
 };
 
 export const createIntelligenceDelegationToken = async (
+  delegationTokenServer: DelegationTokenServer,
   request: DelegationTokenRequest
 ): Promise<DelegationTokenResponse> => {
-  logger.debug("Creating intelligence delegation token");
-  const server = await getDelegationTokenServer();
-
   const delegationToken: DelegationTokenResponse =
-    await server.createDelegationToken(request);
+    await delegationTokenServer.createDelegationToken(request);
   return delegationToken;
 };

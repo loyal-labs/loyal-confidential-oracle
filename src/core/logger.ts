@@ -47,8 +47,8 @@ const prettyTransport = (() => {
       options: {
         colorize: true,
         ignore: "pid,hostname",
-        singleLine: true,
-        hideObject: true,
+        singleLine: false,
+        hideObject: false,
         translateTime: "SYS:standard",
         messageFormat: "[{env}] {msg}",
       },
