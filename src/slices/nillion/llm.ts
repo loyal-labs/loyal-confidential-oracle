@@ -5,11 +5,11 @@ import {
   type DelegationTokenRequest,
   type DelegationTokenResponse,
 } from "@nillion/nilai-ts";
+import base58 from "bs58";
 import assert from "node:assert/strict";
 import { createLogger } from "../../core/logger";
 import { TOKEN_EXPIRATION_TIME, TOKEN_SANDBOX, TOKEN_USES } from "./constants";
 import { BUILDER_KEY } from "./env";
-import { getUserHexKeyFromSolanaPublicKey } from "./helpers";
 
 const logger = createLogger({ module: "nillion:llm" });
 
@@ -62,4 +62,11 @@ export const createIntelligenceDelegationToken = async (
   const delegationToken: DelegationTokenResponse =
     await delegationTokenServer.createDelegationToken(request);
   return delegationToken;
+};
+
+export const getUserHexKeyFromSolanaPublicKey = (publicKey: string): string => {
+  logger.debug("Getting user hex key from Solana public key: %s", publicKey);
+  const userPublicKeyBytes = base58.decode(publicKey);
+  const userPublicKeyHex = Buffer.from(userPublicKeyBytes).toString("hex");
+  return userPublicKeyHex;
 };

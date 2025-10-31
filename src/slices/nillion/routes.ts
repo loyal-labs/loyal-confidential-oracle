@@ -59,7 +59,7 @@ export const nillionRoutes: FastifyPluginAsync = async (app) => {
         "Storage delegation token created for public key: %s",
         publicKey
       );
-      return { storageDelegationToken };
+      return { delegationToken: storageDelegationToken };
     },
   });
 

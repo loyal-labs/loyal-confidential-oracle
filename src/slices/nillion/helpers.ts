@@ -95,13 +95,6 @@ export const getUserDidFromSolanaPublicKey = (publicKey: string): Did => {
   return Did.fromPublicKey(userPublicKeyHex, "key");
 };
 
-export const getUserHexKeyFromSolanaPublicKey = (publicKey: string): string => {
-  logger.debug("Getting user hex key from Solana public key: %s", publicKey);
-  const userPublicKeyBytes = base58.decode(publicKey);
-  const userPublicKeyHex = Buffer.from(userPublicKeyBytes).toString("hex");
-  return userPublicKeyHex;
-};
-
 export const getNilaiPublicKey = async (): Promise<string> => {
   const publicKeyUrl = new URL(NILLION_LLM_PUBLIC_KEY_URL);
   const publicKeyResponse = await fetch(publicKeyUrl.toString(), {
