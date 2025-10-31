@@ -3,6 +3,9 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "start": "bun run src/app.ts"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
@@ -21,6 +24,7 @@
     "@nillion/secretvaults": "^1.0.0",
     "@solana/web3.js": "^1.98.4",
     "axios": "^1.12.2",
+    "fastify": "^5.6.1",
     "graphql": "^16.11.0",
     "pino": "^10.1.0",
     "pino-pretty": "^11.2.1",
