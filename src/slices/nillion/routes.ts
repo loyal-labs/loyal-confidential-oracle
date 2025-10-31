@@ -5,42 +5,38 @@ import {
   type VerifySignInRequestBody,
 } from "../solana/schemas";
 import { verifySIWS } from "../solana/sign-in-with-solana";
-import {
-  DelegationTokenResponseSchema,
-  ModelDelegationTokenResponseSchema,
-  StorageDelegationTokenResponseSchema,
-} from "./responses";
-import { getDelegationToken, getModelDelegationToken } from "./service";
+import { StorageDelegationTokenResponseSchema } from "./responses";
+import { getDelegationToken } from "./service";
 
 const logger = createLogger({ module: "nillion:routes" });
 
 export const nillionRoutes: FastifyPluginAsync = async (app) => {
   logger.debug("Registering solana delegation token routes");
 
-  app.route<{ Body: VerifySignInRequestBody }>({
-    method: "POST",
-    url: "/solana/delegation-tokens",
-    schema: {
-      body: VerifyRequestBodySchema,
-      response: DelegationTokenResponseSchema,
-    },
-    handler: async (request, reply) => {
-      const { input, output } = request.body;
-      const verified = verifySIWS(input, output);
+  // app.route<{ Body: VerifySignInRequestBody }>({
+  //   method: "POST",
+  //   url: "/solana/delegation-tokens",
+  //   schema: {
+  //     body: VerifyRequestBodySchema,
+  //     response: DelegationTokenResponseSchema,
+  //   },
+  //   handler: async (request, reply) => {
+  //     const { input, output } = request.body;
+  //     const verified = verifySIWS(input, output);
 
-      if (!verified) {
-        logger.debug("Verification failed");
-        reply.code(401);
-        return { error: "Verification failed" };
-      }
+  //     if (!verified) {
+  //       logger.debug("Verification failed");
+  //       reply.code(401);
+  //       return { error: "Verification failed" };
+  //     }
 
-      const publicKey = output.account.address;
-      const storageDelegationToken = await getDelegationToken(publicKey);
-      const modelDelegationToken = await getModelDelegationToken(publicKey);
-      logger.debug("Delegation tokens created for public key: %s", publicKey);
-      return { storageDelegationToken, modelDelegationToken };
-    },
-  });
+  //     const publicKey = output.account.address;
+  //     const storageDelegationToken = await getDelegationToken(publicKey);
+  //     const modelDelegationToken = await getModelDelegationToken(publicKey);
+  //     logger.debug("Delegation tokens created for public key: %s", publicKey);
+  //     return { storageDelegationToken, modelDelegationToken };
+  //   },
+  // });
 
   app.route<{ Body: VerifySignInRequestBody }>({
     method: "POST",
@@ -67,28 +63,28 @@ export const nillionRoutes: FastifyPluginAsync = async (app) => {
     },
   });
 
-  app.route<{ Body: VerifySignInRequestBody }>({
-    method: "POST",
-    url: "/solana/delegation-tokens/model",
-    schema: {
-      body: VerifyRequestBodySchema,
-      response: ModelDelegationTokenResponseSchema,
-    },
-    handler: async (request, reply) => {
-      const { input, output } = request.body;
-      const verified = verifySIWS(input, output);
-      if (!verified) {
-        logger.debug("Verification failed");
-        reply.code(401);
-        return { error: "Verification failed" };
-      }
-      const publicKey = output.account.address;
-      const modelDelegationToken = await getModelDelegationToken(publicKey);
-      logger.debug(
-        "Model delegation token created for public key: %s",
-        publicKey
-      );
-      return { modelDelegationToken };
-    },
-  });
+  // app.route<{ Body: VerifySignInRequestBody }>({
+  //   method: "POST",
+  //   url: "/solana/delegation-tokens/model",
+  //   schema: {
+  //     body: VerifyRequestBodySchema,
+  //     response: ModelDelegationTokenResponseSchema,
+  //   },
+  //   handler: async (request, reply) => {
+  //     const { input, output } = request.body;
+  //     const verified = verifySIWS(input, output);
+  //     if (!verified) {
+  //       logger.debug("Verification failed");
+  //       reply.code(401);
+  //       return { error: "Verification failed" };
+  //     }
+  //     const publicKey = output.account.address;
+  //     const modelDelegationToken = await getModelDelegationToken(publicKey);
+  //     logger.debug(
+  //       "Model delegation token created for public key: %s",
+  //       publicKey
+  //     );
+  //     return { modelDelegationToken };
+  //   },
+  // });
 };

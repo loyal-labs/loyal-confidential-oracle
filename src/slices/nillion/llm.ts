@@ -1,6 +1,7 @@
 import {
   DelegationTokenServer,
   NilAuthInstance,
+  RequestType,
   type DelegationTokenRequest,
   type DelegationTokenResponse,
 } from "@nillion/nilai-ts";
@@ -8,10 +9,24 @@ import assert from "node:assert/strict";
 import { createLogger } from "../../core/logger";
 import { TOKEN_EXPIRATION_TIME, TOKEN_SANDBOX, TOKEN_USES } from "./constants";
 import { BUILDER_KEY } from "./env";
+import { getUserHexKeyFromSolanaPublicKey } from "./helpers";
 
 const logger = createLogger({ module: "nillion:llm" });
 
 let delegationTokenServer: DelegationTokenServer | null = null;
+
+export const getModelDelegationToken = async (publicKey: string) => {
+  logger.debug("Getting model delegation token for public key: %s", publicKey);
+  const userHexKey = getUserHexKeyFromSolanaPublicKey(publicKey);
+  const server = await getDelegationTokenServer();
+  const request: DelegationTokenRequest = {
+    public_key: userHexKey,
+    type: RequestType.DELEGATION_TOKEN_REQUEST,
+  };
+  const delegationToken = await server.createDelegationToken(request);
+  logger.debug("Model delegation token created for public key: %s", publicKey);
+  return delegationToken;
+};
 
 export const getDelegationTokenServer = async (
   expTime: number = TOKEN_EXPIRATION_TIME,

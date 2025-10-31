@@ -12,3 +12,10 @@ export const NILLION_LLM_MODEL = "google/gemma-3-27b-it";
 export const TOKEN_USES = 20;
 export const TOKEN_EXPIRATION_TIME = 2880; // 24 hours
 export const TOKEN_SANDBOX = true;
+
+export const NILLION_LLM_PUBLIC_KEY_URL =
+  "https://nilai-a779.nillion.network/v1/public_key";
+
+export const NILAUTH_URL =
+  "https://nilauth.sandbox.app-cluster.sandbox.nilogy.xyz";
+export const RPC_URL = "http://rpc.testnet.nilchain-rpc-proxy.nilogy.xyz";

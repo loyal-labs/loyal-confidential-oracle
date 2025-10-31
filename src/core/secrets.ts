@@ -3,13 +3,13 @@ import { FullItem, OnePasswordConnect, type Vault } from "@1password/connect";
 import assert from "node:assert/strict";
 import { runtimeEnv } from "./runtime-env";
 
+const VAULT_NAME = "loyal-web-backend";
+
 const serverURL = runtimeEnv.ONEPASS_CONNECT_HOST;
 const token = runtimeEnv.ONEPASS_CONNECT_TOKEN;
-const vaultName = runtimeEnv.ONEPASS_CONNECT_VAULT_NAME;
 
 assert(serverURL, "ONEPASS_CONNECT_HOST not configured");
 assert(token, "ONEPASS_CONNECT_TOKEN not configured");
-assert(vaultName, "ONEPASS_CONNECT_VAULT_NAME not configured");
 
 export const secretsManager = OnePasswordConnect({
   serverURL,
@@ -20,13 +20,13 @@ export const secretsManager = OnePasswordConnect({
 const vaultCache = new Map<string, Vault>();
 
 export const getVault = async (): Promise<Vault> => {
-  const cachedVault = vaultCache.get(vaultName);
+  const cachedVault = vaultCache.get(VAULT_NAME);
   if (cachedVault) {
     return cachedVault;
   }
 
-  const vault = await secretsManager.getVaultByTitle(vaultName);
-  vaultCache.set(vaultName, vault);
+  const vault = await secretsManager.getVaultByTitle(VAULT_NAME);
+  vaultCache.set(VAULT_NAME, vault);
 
   return vault;
 };

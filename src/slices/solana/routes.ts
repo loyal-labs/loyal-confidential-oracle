@@ -39,9 +39,10 @@ export const solanaRoutes: FastifyPluginAsync = async (app) => {
 
       if (!verified) {
         reply.code(401);
+        return { verified: false };
       }
 
-      return { verified };
+      return { verified: true };
     },
   });
 };

@@ -6,8 +6,13 @@ import {
 import base58 from "bs58";
 import { Buffer } from "buffer";
 import { createLogger } from "../../core/logger";
-import { NODE_DB_URLS } from "./constants";
-import { BUILDER_KEY, NILAUTH_URL, RPC_URL, USER_KEY } from "./env";
+import {
+  NILAUTH_URL,
+  NILLION_LLM_PUBLIC_KEY_URL,
+  NODE_DB_URLS,
+  RPC_URL,
+} from "./constants";
+import { BUILDER_KEY, USER_KEY } from "./env";
 
 const logger = createLogger({ module: "nillion:helpers" });
 
@@ -95,4 +100,13 @@ export const getUserHexKeyFromSolanaPublicKey = (publicKey: string): string => {
   const userPublicKeyBytes = base58.decode(publicKey);
   const userPublicKeyHex = Buffer.from(userPublicKeyBytes).toString("hex");
   return userPublicKeyHex;
+};
+
+export const getNilaiPublicKey = async (): Promise<string> => {
+  const publicKeyUrl = new URL(NILLION_LLM_PUBLIC_KEY_URL);
+  const publicKeyResponse = await fetch(publicKeyUrl.toString(), {
+    method: "GET",
+  });
+  const publicKey = await publicKeyResponse.text();
+  return publicKey;
 };
