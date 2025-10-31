@@ -1,10 +1,15 @@
-import { NilauthClient, PayerBuilder, Signer } from "@nillion/nuc";
+import { Did, NilauthClient, PayerBuilder, Signer } from "@nillion/nuc";
 import {
   SecretVaultBuilderClient,
   SecretVaultUserClient,
 } from "@nillion/secretvaults";
+import base58 from "bs58";
+import { Buffer } from "buffer";
+import { createLogger } from "../../core/logger";
 import { NODE_DB_URLS } from "./constants";
 import { BUILDER_KEY, NILAUTH_URL, RPC_URL, USER_KEY } from "./env";
+
+const logger = createLogger({ module: "nillion:helpers" });
 
 let builderSigner: Signer | null = null;
 let userSigner: Signer | null = null;
@@ -49,6 +54,7 @@ export const getBuilderClient = async (): Promise<SecretVaultBuilderClient> => {
       nilauthClient: await getNilauthClient(),
       dbs: NODE_DB_URLS,
     });
+    await builderClient.refreshRootToken();
   }
   return builderClient;
 };
@@ -76,3 +82,10 @@ export const getBuilderAsUserClient =
 
     return builderAsUserClient;
   };
+
+export const getUserDidFromSolanaPublicKey = (publicKey: string): Did => {
+  logger.debug("Getting user DID from Solana public key: %s", publicKey);
+  const userPublicKeyBytes = base58.decode(publicKey);
+  const userPublicKeyHex = Buffer.from(userPublicKeyBytes).toString("hex");
+  return Did.fromPublicKey(userPublicKeyHex, "key");
+};

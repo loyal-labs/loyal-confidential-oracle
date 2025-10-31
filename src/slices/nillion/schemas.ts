@@ -53,3 +53,4 @@ export const MockAssistantMessage = {
   created_at: "2024-04-27T16:00:05.000Z",
   content: { "%allot": "Hello! How can I help?" },
 };
+

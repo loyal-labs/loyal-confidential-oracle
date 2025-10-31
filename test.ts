@@ -1,17 +1,28 @@
-// const delegationTokenRequest: DelegationTokenRequest = {
-//   type: "DELEGATION_TOKEN_REQUEST",
-//   public_key: "did:nillion:1234567890",
-// };
+import { Did } from "@nillion/nuc";
+import base58 from "bs58";
+import { Buffer } from "buffer";
+import { createDelegationToken } from "./src/slices/nillion/builder";
+import {
+  getBuilderClient,
+  getBuilderSigner,
+} from "./src/slices/nillion/helpers";
 
-// const client = new NilaiOpenAIClient({
-//   baseURL: "https://nilai-a779.nillion.network/v1/",
-//   authType: AuthType.DELEGATION_TOKEN,
-// });
+(async () => {
+  const userPublicKey = "E9A8xpJ28MpFU88mRbSnFmyHExru43HHrDuscemjrjUb";
+  const userPublicKeyBytes = base58.decode(userPublicKey);
+  const userPublicKeyHex = Buffer.from(userPublicKeyBytes).toString("hex");
+  console.log(userPublicKeyHex);
 
-// const delegationRequest = await client.getDelegationRequest();
+  const userDid = Did.fromPublicKey(userPublicKeyHex);
+  console.log(userDid);
+  const builderClient = await getBuilderClient();
+  await builderClient.refreshRootToken();
+  const builderSigner = getBuilderSigner();
 
-// const delegationResponse = await createIntelligenceDelegationToken(
-//   delegationRequest
-// );
-
-// console.log(delegationResponse);
+  const delegationToken = await createDelegationToken(
+    userDid,
+    builderClient,
+    builderSigner
+  );
+  console.log(delegationToken);
+})();
