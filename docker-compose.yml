@@ -8,5 +8,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      NODE_ENV: production
+      NODE_ENV: "production"
+      LOG_LEVEL: "debug"
+      PORT: "3000"
+      HOST: "0.0.0.0"
     restart: unless-stopped

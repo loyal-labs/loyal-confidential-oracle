@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  app:
+    image: askloyal/loyal-oracle:latest
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      LOG_LEVEL: debug
+      PORT: 3000
+      HOST: 0.0.0.0
+      ONEPASS_CONNECT_TOKEN:${ONEPASS_CONNECT_TOKEN}
+      ONEPASS_CONNECT_HOST:${ONEPASS_CONNECT_HOST}
+      PHALA_API_KEY:${PHALA_API_KEY}
+      SOLANA_ORACLE_PRIVATE_KEY:${SOLANA_ORACLE_PRIVATE_KEY}
+      NILLION_PRIVATE_KEY_HEX:${NILLION_PRIVATE_KEY_HEX}
+      USER_PRIVATE_KEY:${USER_PRIVATE_KEY}
+    restart: unless-stopped
