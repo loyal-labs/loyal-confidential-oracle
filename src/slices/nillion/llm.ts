@@ -19,10 +19,12 @@ export const getDelegationTokenServer = async (
   sandbox: boolean = TOKEN_SANDBOX
 ): Promise<DelegationTokenServer> => {
   if (!delegationTokenServer) {
-    console.debug("Creating new delegation token server");
+    logger.debug("Creating new delegation token server");
     assert(expTime > 0, "Expiration time must be greater than 0");
     assert(tokenUses > 0, "Token uses must be greater than 0");
     assert(typeof sandbox === "boolean", "Sandbox must be a boolean");
+
+    const expTimeInSeconds = expTime * 60;
 
     const nilauthInstance = sandbox
       ? NilAuthInstance.SANDBOX
@@ -30,11 +32,11 @@ export const getDelegationTokenServer = async (
 
     delegationTokenServer = new DelegationTokenServer(BUILDER_KEY, {
       nilauthInstance,
-      expirationTime: expTime,
+      expirationTime: expTimeInSeconds,
       tokenMaxUses: tokenUses,
     });
   }
-  console.debug("Delegation token server created");
+  logger.debug("Delegation token server created");
   return delegationTokenServer;
 };
 
