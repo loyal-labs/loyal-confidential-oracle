@@ -16,7 +16,7 @@ export const solanaRoutes: FastifyPluginAsync = async (app) => {
 
   app.route({
     method: "GET",
-    url: "/solana/sign-in",
+    url: "/solana/sign-in/create",
     schema: {
       response: SignInResponseSchema,
     },
