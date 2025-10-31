@@ -1,3 +1,5 @@
+import swagger from "@fastify/swagger";
+import swaggerUi from "@fastify/swagger-ui";
 import Fastify from "fastify";
 
 import { createLogger } from "./core/logger";
@@ -9,6 +11,45 @@ const appLogger = createLogger({ module: "fastify" });
 export const buildApp = () => {
   const app = Fastify({
     loggerInstance: appLogger,
+    trustProxy: true,
+    disableRequestLogging: true,
+  });
+
+  app.register(swagger, {
+    openapi: {
+      info: {
+        title: runtimeEnv.npm_package_name ?? "loyal-confidential-oracle",
+        version: runtimeEnv.npm_package_version ?? "0.0.0",
+      },
+    },
+  });
+
+  app.register(swaggerUi, {
+    routePrefix: "/docs",
+    staticCSP: true,
+    transformStaticCSP: (header) => header,
+  });
+
+  app.addHook("onRequest", async (request) => {
+    request.log.debug(
+      {
+        method: request.method,
+        url: request.url,
+      },
+      "request: received"
+    );
+  });
+
+  app.addHook("onResponse", async (request, reply) => {
+    request.log.debug(
+      {
+        method: request.method,
+        url: request.url,
+        statusCode: reply.statusCode,
+        responseTime: reply.elapsedTime,
+      },
+      "request: completed"
+    );
   });
 
   app.get("/health", async () => ({ status: "ok" }));

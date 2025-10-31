@@ -17,6 +17,8 @@
     "@coral-xyz/anchor": "^0.32.1",
     "@cosmjs/proto-signing": "^0.36.2",
     "@cosmjs/stargate": "^0.36.2",
+    "@fastify/swagger": "^9.5.2",
+    "@fastify/swagger-ui": "^5.2.3",
     "@irys/upload": "^0.0.15",
     "@irys/upload-solana": "^0.1.8",
     "@nillion/nilai-ts": "^0.2.0",
